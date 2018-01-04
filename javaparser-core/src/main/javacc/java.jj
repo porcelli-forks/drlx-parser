@@ -1633,7 +1633,27 @@ Expression ConditionalOrExpression():
 	Expression right;
 }
 {
-  ret = ConditionalAndExpression() ( "||" right = ConditionalAndExpression() { ret = new BinaryExpr(range(ret.getTokenRange().get().getBegin(), token()), ret, right, BinaryExpr.Operator.OR); } )*
+  ret = ConditionalOrHalfBinaryExpression() ( "||" right = ConditionalOrHalfBinaryExpression() { ret = new BinaryExpr(range(ret.getTokenRange().get().getBegin(), token()), ret, right, BinaryExpr.Operator.OR); } )*
+  { return ret; }
+}
+
+Expression ConditionalOrHalfBinaryExpression():
+{
+	Expression ret;
+	Expression right;
+}
+{
+  ret = ConditionalAndHalfBinaryExpression() ( "||" right = HalfBinaryExpression() { ret = new BinaryExpr(range(ret.getTokenRange().get().getBegin(), token()), ret, right, BinaryExpr.Operator.OR); } )*
+  { return ret; }
+}
+
+Expression ConditionalAndHalfBinaryExpression():
+{
+	Expression ret;
+	Expression right;
+}
+{
+  ret = ConditionalAndExpression() ( "&&" right = HalfBinaryExpression() { ret = new BinaryExpr(range(ret.getTokenRange().get().getBegin(), token()), ret, right, BinaryExpr.Operator.AND); } )*
   { return ret; }
 }
 
@@ -1646,6 +1666,27 @@ Expression ConditionalAndExpression():
   ret = InclusiveOrExpression() ( "&&" right = InclusiveOrExpression() { ret = new BinaryExpr(range(ret.getTokenRange().get().getBegin(), token()), ret, right, BinaryExpr.Operator.AND); } )*
   { return ret; }
 }
+
+Expression HalfBinaryExpression():
+{
+	Expression ret;
+	HalfBinaryExpr.Operator op;
+	JavaToken begin = INVALID;
+}
+{
+  (
+	  ( "==" { op = HalfBinaryExpr.Operator.EQUALS; begin=token();} |
+	    "!=" { op = HalfBinaryExpr.Operator.NOT_EQUALS; begin=token();}
+	  ) ret = HalfBinaryExpression()
+	  {
+        ret = new HalfBinaryExpr(range(begin, token()), ret, op);
+	  }
+	|
+	  ret = UnaryExpression()
+  )
+  { return ret; }
+}
+
 
 Expression InclusiveOrExpression():
 {

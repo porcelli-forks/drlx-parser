@@ -182,7 +182,30 @@ public class DrlxParserTest {
 
     @Test
     public void testOrWithImplicitParameter() {
-        String expr = "name == \"Mark\" || == \"Mario\"";
+        String expr = "name == \"Mark\" || == \"Mario\" || == \"Luca\"";
+        Expression expression = DrlxParser.parseExpression( expr ).getExpr();
+        System.out.println(expression);
+
+        BinaryExpr comboExpr = ( (BinaryExpr) expression );
+        assertEquals(Operator.OR, comboExpr.getOperator());
+
+        BinaryExpr first = ((BinaryExpr)((BinaryExpr) comboExpr.getLeft()).getLeft());
+        assertEquals("name", first.getLeft().toString());
+        assertEquals("\"Mark\"", first.getRight().toString());
+        assertEquals(Operator.EQUALS, first.getOperator());
+
+        HalfBinaryExpr second = (HalfBinaryExpr) ((BinaryExpr) comboExpr.getLeft()).getRight();
+        assertEquals("\"Mario\"", second.getRight().toString());
+        assertEquals(HalfBinaryExpr.Operator.EQUALS, second.getOperator());
+
+        HalfBinaryExpr third = (HalfBinaryExpr) comboExpr.getRight();
+        assertEquals("\"Luca\"", third.getRight().toString());
+        assertEquals(HalfBinaryExpr.Operator.EQUALS, third.getOperator());
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testOrWithImplicitParameter2() {
+        String expr = "name == \"Mark\" && == \"Mario\"";
         Expression expression = DrlxParser.parseExpression( expr ).getExpr();
         System.out.println(expression);
 

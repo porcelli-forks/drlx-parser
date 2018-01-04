@@ -69,6 +69,7 @@ import com.github.javaparser.ast.expr.DoubleLiteralExpr;
 import com.github.javaparser.ast.expr.EnclosedExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
+import com.github.javaparser.ast.expr.HalfBinaryExpr;
 import com.github.javaparser.ast.expr.InstanceOfExpr;
 import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.expr.LambdaExpr;
@@ -666,6 +667,15 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
     public void visit(final BinaryExpr n, final Void arg) {
         printJavaComment(n.getComment(), arg);
         n.getLeft().accept(this, arg);
+        printer.print(" ");
+        printer.print(n.getOperator().asString());
+        printer.print(" ");
+        n.getRight().accept(this, arg);
+    }
+
+    @Override
+    public void visit(HalfBinaryExpr n, Void arg) {
+        printJavaComment(n.getComment(), arg);
         printer.print(" ");
         printer.print(n.getOperator().asString());
         printer.print(" ");
