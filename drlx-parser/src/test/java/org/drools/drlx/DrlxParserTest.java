@@ -203,6 +203,12 @@ public class DrlxParserTest {
         assertEquals(HalfBinaryExpr.Operator.EQUALS, third.getOperator());
     }
 
+    @Test(expected = ParseProblemException.class)
+    public void testUnsupportedImplicitParameter() {
+        String expr = "== \"Mark\"";
+        DrlxParser.parseExpression( expr ).getExpr();
+    }
+
     @Test(expected = UnsupportedOperationException.class)
     public void testOrWithImplicitParameter2() {
         String expr = "name == \"Mark\" && == \"Mario\"";
