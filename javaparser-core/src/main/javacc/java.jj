@@ -1676,7 +1676,11 @@ Expression HalfBinaryExpression():
 {
   (
 	  ( "==" { op = HalfBinaryExpr.Operator.EQUALS; begin=token();} |
-	    "!=" { op = HalfBinaryExpr.Operator.NOT_EQUALS; begin=token();}
+	    "!=" { op = HalfBinaryExpr.Operator.NOT_EQUALS; begin=token();} |
+	    "<" { op = HalfBinaryExpr.Operator.LESS; begin=token();} |
+	    ">" { op = HalfBinaryExpr.Operator.GREATER; begin=token();} |
+	    "<=" { op = HalfBinaryExpr.Operator.LESS_EQUALS; begin=token();} |
+	    ">=" { op = HalfBinaryExpr.Operator.GREATER_EQUALS; begin=token();}
 	  ) ret = HalfBinaryExpression()
 	  {
         ret = new HalfBinaryExpr(range(begin, token()), ret, op);
