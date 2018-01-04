@@ -30,6 +30,7 @@ import com.github.javaparser.ast.expr.BinaryExpr;
 import com.github.javaparser.ast.expr.BinaryExpr.Operator;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
+import com.github.javaparser.ast.expr.HalfBinaryExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import org.junit.Test;
 
@@ -181,7 +182,7 @@ public class DrlxParserTest {
 
     @Test
     public void testOrWithImplicitParameter() {
-        String expr = "name == \"Mark\" || name == \"Mario\"";
+        String expr = "name == \"Mark\" || == \"Mario\"";
         Expression expression = DrlxParser.parseExpression( expr ).getExpr();
         System.out.println(expression);
 
@@ -193,8 +194,7 @@ public class DrlxParserTest {
         assertEquals("\"Mark\"", left.getRight().toString());
         assertEquals(Operator.EQUALS, left.getOperator());
 
-        BinaryExpr right = (BinaryExpr) comboExpr.getRight();
-        assertEquals("name", right.getLeft().toString());
+        HalfBinaryExpr right = (HalfBinaryExpr) comboExpr.getRight();
         assertEquals("\"Mario\"", right.getRight().toString());
         assertEquals(Operator.EQUALS, right.getOperator());
     }
