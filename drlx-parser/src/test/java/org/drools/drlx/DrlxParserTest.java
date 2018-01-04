@@ -178,4 +178,24 @@ public class DrlxParserTest {
         assertTrue(expression instanceof PointFreeExpr);
         assertEquals(expr, toDrlx(expression));
     }
+
+    @Test
+    public void testOrWithImplicitParameter() {
+        String expr = "name == \"Mark\" || name == \"Mario\"";
+        Expression expression = DrlxParser.parseExpression( expr ).getExpr();
+        System.out.println(expression);
+
+        BinaryExpr comboExpr = ( (BinaryExpr) expression );
+        assertEquals(Operator.OR, comboExpr.getOperator());
+
+        BinaryExpr left = (BinaryExpr) comboExpr.getLeft();
+        assertEquals("name", left.getLeft().toString());
+        assertEquals("\"Mark\"", left.getRight().toString());
+        assertEquals(Operator.EQUALS, left.getOperator());
+
+        BinaryExpr right = (BinaryExpr) comboExpr.getRight();
+        assertEquals("name", right.getLeft().toString());
+        assertEquals("\"Mario\"", right.getRight().toString());
+        assertEquals(Operator.EQUALS, right.getOperator());
+    }
 }
