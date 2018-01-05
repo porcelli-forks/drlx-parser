@@ -676,7 +676,6 @@ public class PrettyPrintVisitor implements VoidVisitor<Void> {
     @Override
     public void visit(HalfBinaryExpr n, Void arg) {
         printJavaComment(n.getComment(), arg);
-        printer.print(" ");
         printer.print(n.getOperator().asString());
         printer.print(" ");
         n.getRight().accept(this, arg);

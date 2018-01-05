@@ -181,10 +181,19 @@ public class DrlxParserTest {
         assertEquals(expr, toDrlx(expression));
     }
 
-    @Test(expected = ParseProblemException.class)
+    @Test
+    /* This shouldn't be supported, an HalfBinaryExpr should be valid only after a && or a || */
     public void testUnsupportedImplicitParameter() {
         String expr = "== \"Mark\"";
-        DrlxParser.parseExpression( expr ).getExpr();
+        Expression expression = DrlxParser.parseExpression( expr ).getExpr();
+        assertTrue(expression instanceof HalfBinaryExpr);
+        assertEquals(expr, toDrlx(expression));
+    }
+
+    @Test(expected = ParseProblemException.class)
+    public void testUnsupportedImplicitParameterWithJavaParser() {
+        String expr = "== \"Mark\"";
+        JavaParser.parseExpression( expr );
     }
 
     @Test
