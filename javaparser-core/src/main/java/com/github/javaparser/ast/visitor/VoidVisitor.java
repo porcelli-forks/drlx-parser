@@ -307,6 +307,8 @@ public interface VoidVisitor<A> {
     @Generated("com.github.javaparser.generator.core.visitor.VoidVisitorGenerator")
     void visit(UnparsableStmt n, A arg);
 
+    void visit(HalfBinaryExpr n, A arg);
+
     VoidRuleVisitor DUMMY_RULE_VISITOR = new VoidRuleVisitor() {
     };
 

@@ -1794,7 +1794,7 @@ Expression UnaryExpression():
         ret = new UnaryExpr(range(begin, token()), ret, op);
 	  }
 	|
-	  ret = UnaryExpressionNotPlusMinus()
+	  ret = HalfBinaryExpression()
   )
   { return ret; }
 }
@@ -1818,6 +1818,34 @@ Expression PreDecrementExpression():
   "--" {begin=token();} ret = UnaryExpression() { ret = new UnaryExpr(range(begin, token()), ret, UnaryExpr.Operator.PREFIX_DECREMENT); }
   { return ret; }
 }
+
+// drlx start
+Expression HalfBinaryExpression():
+{
+	Expression ret;
+	HalfBinaryExpr.Operator op;
+	JavaToken begin = INVALID;
+	boolean isDrl = false;
+}
+{
+  (
+	  ( "==" { op = HalfBinaryExpr.Operator.EQUALS; begin=token();} |
+	    "!=" { op = HalfBinaryExpr.Operator.NOT_EQUALS; begin=token();} |
+	    "<" { op = HalfBinaryExpr.Operator.LESS; begin=token();} |
+	    ">" { op = HalfBinaryExpr.Operator.GREATER; begin=token();} |
+	    "<=" { op = HalfBinaryExpr.Operator.LESS_EQUALS; begin=token();} |
+	    ">=" { op = HalfBinaryExpr.Operator.GREATER_EQUALS; begin=token();}
+	  ) ret = HalfBinaryExpression()
+	  {
+	    isDrl = true;
+        ret = new HalfBinaryExpr(range(begin, token()), ret, op);
+	  }
+	|
+	  ret = UnaryExpressionNotPlusMinus()
+  )
+  { return isDrl ? asDrlNode(ret) : ret; }
+}
+// drlx end
 
 Expression UnaryExpressionNotPlusMinus():
 {
