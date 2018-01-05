@@ -32,6 +32,7 @@ import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.HalfBinaryExpr;
 import com.github.javaparser.ast.expr.NameExpr;
+import com.github.javaparser.ast.stmt.BlockStmt;
 import org.junit.Test;
 
 import static com.github.javaparser.printer.PrintUtil.toDrlx;
@@ -254,5 +255,31 @@ public class DrlxParserTest {
         HalfBinaryExpr third = (HalfBinaryExpr) comboExpr.getRight();
         assertEquals("\"Luca\"", third.getRight().toString());
         assertEquals(HalfBinaryExpr.Operator.EQUALS, third.getOperator());
+    }
+
+    @Test
+    public void regressionTestImplicitOperator() {
+        String expr =
+        "{ " +
+        "   for (i = 0; i < 10 && i < 2; i++) {\n" +
+        "            break;\n" +
+        "   }\n" +
+        "}";
+        BlockStmt expression = JavaParser.parseBlock(expr );
+        System.out.println(expression);
+    }
+
+    @Test
+    public void regressionTestImplicitOperator2() {
+        String expr = "i < 10 && i < 2";
+        Expression expression = JavaParser.parseExpression(expr );
+        System.out.println(expression);
+    }
+
+    @Test
+    public void regressionTestImplicitOperator3() {
+        String expr = "i == 10 && i == 2";
+        Expression expression = JavaParser.parseExpression(expr );
+        System.out.println(expression);
     }
 }
